@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-study/day1/test"
 	"strconv"
 )
 
@@ -10,8 +11,17 @@ func TestCase1() {
 	fmt.Println("Hello, world!")
 }
 
+const (
+	one = iota + 1
+	two
+	three = iota + 10
+	four
+)
+
 // variable declaration in 4 ways
 func TestCase2() {
+	const con int = 1
+
 	// 1
 	var a1 int
 	a1 = 1
@@ -21,11 +31,18 @@ func TestCase2() {
 
 	// 3
 	var a3 = 3
+	fmt.Printf("type of a3 %T\n", a3)
 
 	// 4
 	a4 := 4
 
+	i := 10
+	pi := &i
+	fmt.Printf("type of pi %T\n", pi)
 	fmt.Println(a1, a2, a3, a4)
+
+	fmt.Println(one, two, three, four)
+
 }
 
 // basic data types
@@ -141,10 +158,9 @@ func TestCase9() {
 
 // switch control block
 func TestCase10() {
-	a := 10
+	a := 2
 	switch a {
 	case 1:
-		fmt.Println("a is 1")
 		fallthrough
 	case 2:
 		fmt.Println("a is 2")
@@ -173,14 +189,15 @@ func TestCase12() {
 
 // array
 func TestCase13() {
+
 	array := [5]string{"a", "b", "c", "d", "e"}
 	fmt.Println(array)
 
 	array1 := [5]string{1: "b", 3: "d"}
-	fmt.Println(array1)
+	fmt.Println(array1, len(array1))
 
 	array2 := [...]string{1: "b", 3: "d"}
-	fmt.Println(array2)
+	fmt.Println(array2, len(array2))
 
 	for i := 0; i < len(array); i++ {
 		fmt.Println("array: ", array[i], " array1: ", array1[i])
@@ -220,20 +237,161 @@ func TestCase15() {
 	fmt.Println(len(slice), cap(slice))
 }
 
+// map
+func TestCase16() {
+	m := make(map[string]int)
+	m["a"] = 1
+	m["b"] = 2
+	fmt.Println(m)
+
+	delete(m, "a")
+	fmt.Println(m)
+
+	v, ok := m["b"]
+	fmt.Println(v, ok)
+
+	v, ok = m["a"]
+	fmt.Println(v, ok)
+
+	// map initial
+	m1 := map[string]int{"a": 1, "b": 2}
+	fmt.Println(m1)
+}
+
+// string and []byte
+func TestCase17() {
+	s := "hello world"
+	fmt.Printf("Type of s is %T\n", s)
+	b := []byte(s)
+	fmt.Printf("Type of b is %T\n", b)
+
+	fmt.Println(b)
+
+	s1 := string(b)
+	fmt.Println(s1)
+}
+
+// function and multi value return
+func TestCase18() {
+	f := func() (int, error) {
+		return 1, nil
+	}
+
+	v, err := f()
+	if err != nil {
+		fmt.Println("error")
+	} else {
+		fmt.Println(v)
+	}
+
+	// command return parameters
+	f1 := func() (res int, err error) {
+		res = 1
+		err = nil
+		return
+	}
+
+	v1, err1 := f1()
+	if err1 != nil {
+		fmt.Println("error")
+	} else {
+		fmt.Println(v1)
+	}
+
+	// variable parameters
+	f2 := func(a ...int) (int, error) {
+		sum := 0
+		for _, v := range a {
+			sum += v
+		}
+		return sum, nil
+	}
+	v2, err2 := f2(1, 2, 3, 4, 5)
+	if err2 != nil {
+		fmt.Println("error")
+	} else {
+		fmt.Println(v2)
+	}
+}
+
+// packet-level function
+func TestCase19() {
+
+}
+
+func TestCase20() {
+	test.Test3()
+
+}
+
+type Person struct{}
+
+type Runner interface {
+	Run()
+	Drink()
+}
+
+type Node struct {
+	IP     string
+	Port   int
+	Domain string
+}
+
+func (n *Node) Run() {
+	fmt.Println("run")
+}
+
+func (n *Node) Drink() {
+	fmt.Println("drink")
+}
+
+func (n *Node) String() string {
+	return fmt.Sprintf("the ip is %s, port is %d, domain is %s", n.IP, n.Port, n.Domain)
+}
+
+func (n *Node) UpdateIP(ip string) error {
+	n.IP = ip
+	return nil
+}
+
+func (n *Node) UpdatePort(port int) {
+	n.Port = port
+}
+
 func main() {
-	TestCase1()
-	TestCase2()
-	TestCase3()
-	TestCase4()
-	TestCase5()
-	TestCase6()
-	TestCase7()
-	TestCase8()
-	TestCase9()
-	TestCase10()
-	TestCase11()
-	TestCase12()
-	TestCase13()
-	TestCase14()
-	TestCase15()
+	node1 := Node{IP: "0.0.0.0", Port: 8080, Domain: "bk-nodeman.com"}
+
+	runner := Runner(&node1)
+	runner.Run()
+	runner.Drink()
+
+	// node := Node{
+	// 	IP:     "0.0.0.0",
+	// 	Port:   8080,
+	// 	Domain: "bk-nodeman.com",
+	// }
+	// fmt.Println(node.String())
+	// node.UpdatePort(80)
+	// fmt.Println(node.String())
+
+	// TestCase1()
+	// TestCase2()
+	// TestCase3()
+	// TestCase4()
+	// TestCase5()
+	// TestCase6()
+	// TestCase7()
+	// TestCase8()
+	// TestCase9()
+	// TestCase10()
+	// TestCase11()
+	// TestCase12()
+	// TestCase13()
+	// TestCase14()
+	// TestCase15()
+	// TestCase16()
+	// TestCase17()
+	// TestCase18()
+	// TestCase19()
+	// TestCase20()
 }
